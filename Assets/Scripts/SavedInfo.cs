@@ -19,6 +19,14 @@ public class Room{
     public int rotationIndex;
 }
 
+[Serializable]
+public class BuildingInfo{
+    public string name;
+    public int buildCost;
+    public int maintenanceCost;
+    public int count;
+}
+
 public class SavedInfo : MonoBehaviour
 {
     public static SavedInfo self;
@@ -46,6 +54,8 @@ public class SavedInfo : MonoBehaviour
     // public TextAsset waves;
     // public TextAsset scores;
     // [Space]
+
+    public BuildingInfo[] buildInfo;
     
     // [Space]
     // [Header("Booleans")]
@@ -108,17 +118,50 @@ public class SavedInfo : MonoBehaviour
     public int gridX;
     public int gridY;
     public Grid grid;
+    
+
+    public Coins coins;
+    public float timer;
+    public float round;
+    public float roundCosts = 90;
+    public Text timeDisplayer;
+
+    
+    /* This Upate is the one that made it work!
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.D))
+        {
+            Round();
+            timeDisplayer.text = "Time: " + Mathf.Round(timer);
+        }
+    }*/
+     void Round(){
+        timer += Time.deltaTime;
+        if(timer > 5){            
+            round++;
+            timer = 0;
+            RoundEnd();
+        }
+    }
+    void RoundEnd(){
+        coins.spendMoney(roundCosts);
+    }
 
     void Awake()
     {
         if(self == null){
             self = this;
             rooms = new Room[100];
+            buildInfo = new BuildingInfo[10];
+            InitializeInfo();            
         }else{
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
         NewRoom();
+        timer = 0;
+        timeDisplayer.text = "Time: " + Mathf.Round(timer);
     }
 
     void Update()
@@ -215,6 +258,63 @@ public class SavedInfo : MonoBehaviour
                 return;
             }
         }
+    }
+
+    private void InitializeInfo(){
+            buildInfo[0].name = "BasicRoom";
+            buildInfo[0].buildCost = 100;
+            buildInfo[0].maintenanceCost = 50;
+            buildInfo[0].count = 0;
+            
+            buildInfo[1].name = "LoungeBar";
+            buildInfo[1].buildCost = 100;
+            buildInfo[1].maintenanceCost = 50;
+            buildInfo[1].count = 0;
+            
+            buildInfo[2].name = "BasicLounge";
+            buildInfo[2].buildCost = 100;
+            buildInfo[2].maintenanceCost = 50;
+            buildInfo[2].count = 0;
+            
+            buildInfo[3].name = "Stairs";
+            buildInfo[3].buildCost = 100;
+            buildInfo[3].maintenanceCost = 50;
+            buildInfo[3].count = 0;
+            
+            buildInfo[4].name = "Elevator";
+            buildInfo[4].buildCost = 100;
+            buildInfo[4].maintenanceCost = 50;
+            buildInfo[4].count = 0;
+            
+            buildInfo[5].name = "Bathroom";
+            buildInfo[5].buildCost = 100;
+            buildInfo[5].maintenanceCost = 50;
+            buildInfo[5].count = 0;
+            
+            buildInfo[6].name = "Corridor";
+            buildInfo[6].buildCost = 100;
+            buildInfo[6].maintenanceCost = 0;
+            buildInfo[6].count = 0;
+            
+            buildInfo[7].name = "Reception";
+            buildInfo[7].buildCost = 100;
+            buildInfo[7].maintenanceCost = 50;
+            buildInfo[7].count = 0;
+            
+            buildInfo[8].name = "Library";
+            buildInfo[8].buildCost = 100;
+            buildInfo[8].maintenanceCost = 50;
+            buildInfo[8].count = 0;
+            
+            buildInfo[9].name = "Professors";
+            buildInfo[9].buildCost = 100;
+            buildInfo[9].maintenanceCost = 50;
+            buildInfo[9].count = 0;
+            
+            buildInfo[10].name = "Staff";
+            buildInfo[10].buildCost = 100;
+            buildInfo[10].maintenanceCost = 50;
+            buildInfo[10].count = 0;
     }
 }
 
