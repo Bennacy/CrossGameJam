@@ -16,6 +16,7 @@ public class Room{
     public GameObject roomObject;
     public Vector2 position;
     public Vector2Int gridPosition;
+    public int rotationIndex;
 }
 
 public class SavedInfo : MonoBehaviour
@@ -25,15 +26,16 @@ public class SavedInfo : MonoBehaviour
     // [Space]
     // [Header("References")]
     public string currScene;
+    public int currLevel;
+    public int roomIndex;
+    public int newRoomIndex;
     public int placedRooms;
     public GameObject[] roomPrefabs;
     public Vector2[] roomSizes;
     public Sprite[] roomSprites;
     public Room[] rooms;
-    public int roomIndex;
-    public int newRoomIndex;
     public GameObject roomPreview;
-    public int currLevel;
+    public int rotationIndex;
     // public Square pressedTile;
     // public LayerMask canvas;
     // public LayerMask path;
@@ -111,7 +113,7 @@ public class SavedInfo : MonoBehaviour
     {
         if(self == null){
             self = this;
-            // rooms = new Room[10];
+            rooms = new Room[100];
         }else{
             Destroy(gameObject);
         }
@@ -124,6 +126,16 @@ public class SavedInfo : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Escape)){
             Application.Quit();
         }
+
+        if(Input.GetKeyDown(KeyCode.DownArrow)){
+            currLevel = Mathf.Clamp(currLevel - 1, 0, 10);
+            currScene = "";
+        }if(Input.GetKeyDown(KeyCode.UpArrow)){
+            currLevel = Mathf.Clamp(currLevel + 1, 0, 10);
+            currScene = "";
+        }
+        
+
         if(currScene != SceneManager.GetActiveScene().name){
             NewScene();
         }
@@ -140,6 +152,7 @@ public class SavedInfo : MonoBehaviour
     }
 
     public void NewRoom(){
+        rotationIndex = 0;
         roomIndex = newRoomIndex;
         Destroy(roomPreview);
         roomPreview = Instantiate(roomPrefabs[roomIndex]);
@@ -148,10 +161,8 @@ public class SavedInfo : MonoBehaviour
 
     public void NewScene(){
         grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
-        Debug.Log(grid);
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         currScene = SceneManager.GetActiveScene().name;
-        Debug.Log("New Scene");
         GetRoomsInLevel();
     }
 
@@ -181,19 +192,17 @@ public class SavedInfo : MonoBehaviour
         grid.GenerateGrid();
         placedRooms = 0;
         for(int i = 0; i < rooms.Length; i++){
-            if(rooms[i].roomObject == null){
-                return;
-            }
-            placedRooms++;
-            if(rooms[i].level == currLevel){
-                int index = rooms[i].index;
-                Debug.Log("New Room: " + rooms[i].gridPosition);
-                grid.PlaceRoom(rooms[i].gridPosition.x, rooms[i].gridPosition.y, roomSizes[index], false);
+            if(rooms[i].roomObject != null){
+                placedRooms++;
+                if(rooms[i].level == currLevel){
+                    int index = rooms[i].index;
+                    grid.PlaceRoom(rooms[i].gridPosition.x, rooms[i].gridPosition.y, roomSizes[index], rooms[i].index, rooms[i].rotationIndex, false);
+                }
             }
         }
     }
 
-    public void AddRoom(Vector2 positionToAdd, Vector2Int gridPositionToAdd){
+    public void AddRoom(Vector2 positionToAdd, Vector2Int gridPositionToAdd, int rotationIndexToAdd){
         for(int i = 0; i < rooms.Length; i++){
             if(rooms[i].roomObject == null){
                 rooms[i].level = currLevel;
@@ -201,9 +210,18 @@ public class SavedInfo : MonoBehaviour
                 rooms[i].roomObject = roomPrefabs[roomIndex];
                 rooms[i].position = positionToAdd;
                 rooms[i].gridPosition = gridPositionToAdd;
+                rooms[i].rotationIndex = rotationIndexToAdd;
                 placedRooms++;
                 return;
             }
         }
     }
 }
+
+
+
+
+
+
+
+

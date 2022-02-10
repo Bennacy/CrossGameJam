@@ -60,8 +60,8 @@ public class Square : MonoBehaviour
     }
 
     private void Clicked(){
-        if(savedInfo.placedRooms < savedInfo.rooms.Length){
-            gridScript.PlaceRoom(col, row, savedInfo.roomSizes[savedInfo.roomIndex], true);
+        if(savedInfo.placedRooms < savedInfo.rooms.Length && savedInfo.placingRoom){
+            gridScript.PlaceRoom(col, row, savedInfo.roomSizes[savedInfo.roomIndex], savedInfo.roomIndex, savedInfo.rotationIndex, true);
         }
     }
 }

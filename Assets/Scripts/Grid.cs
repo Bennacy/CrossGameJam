@@ -67,11 +67,10 @@ public class Grid : MonoBehaviour
         }
     }
 
-    public bool PlaceRoom(int initX, int initY, Vector2 size, bool isNew){
+    public bool PlaceRoom(int initX, int initY, Vector2 size, int roomIndex, int rotationIndex, bool isNew){
         for(int x = initX; x < (initX + size.x); x++){
             Transform currCol = transform.Find(x.ToString());
             for(int y = initY; y > initY - size.y; y--){
-                Debug.Log(currCol);
                 Transform currSquare = currCol.Find(currCol.name.ToString() + ", " + y.ToString());
                 Square script = currSquare.gameObject.GetComponent<Square>();
                 if(script.state == SquareState.occupied){
@@ -80,14 +79,21 @@ public class Grid : MonoBehaviour
                 }              
             }
         }
+        if(rotationIndex % 2 != 0){
+            Vector2 tempVector = size;
+            size.x = tempVector.y;
+            size.y = tempVector.x;
+        }
         Transform firstCol = transform.Find(initX.ToString());
         Transform firstSquare = firstCol.Find(firstCol.name + ", " + (initY).ToString());
-        GameObject newRoom = Instantiate(savedInfo.roomPrefabs[savedInfo.roomIndex]);
+        GameObject newRoom = Instantiate(savedInfo.roomPrefabs[roomIndex]);
         newRoom.transform.position = new Vector2(firstSquare.position.x - .5f, firstSquare.localPosition.y + .5f);
         newRoom.transform.parent = roomParent;
+        newRoom.GetComponent<SpriteRenderer>().sprite = newRoom.GetComponent<RotateRoom>().rotations[rotationIndex];
+        newRoom.transform.rotation = Quaternion.Euler(0, 0, rotationIndex*90);
         if(isNew){
             Vector2Int gridPos = new Vector2Int(initX, initY);
-            savedInfo.AddRoom(newRoom.transform.position, gridPos);
+            savedInfo.AddRoom(newRoom.transform.position, gridPos, rotationIndex);
         }
         for(int x = initX; x < (initX + size.x); x++){
             Transform currCol = transform.Find(x.ToString());
