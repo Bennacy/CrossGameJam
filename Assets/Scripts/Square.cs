@@ -33,6 +33,7 @@ public class Square : MonoBehaviour
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         ray = Physics2D.Raycast(mousePos, Vector2.zero, 0, clickLayer);
+        Debug.Log(clickLayer);
         if(ray.collider != null){
             mouseOver = ray.collider.name == gameObject.name;
         }
@@ -43,9 +44,9 @@ public class Square : MonoBehaviour
             sr.color = new Color(1,0,0);
         }
 
-        Clicked();
         if(mouseOver){
             if(Input.GetMouseButtonUp(0) && !savedInfo.dragging && !savedInfo.mouseOverCanvas && !savedInfo.mouseOverPath){
+                Clicked();
             }
         }
     }

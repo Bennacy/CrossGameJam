@@ -164,8 +164,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 519420031}
   zoomSpeed: 0.25
-  maxZoom: 2
-  minZoom: 5
+  maxZoom: 3
+  minZoom: 7
   dragTolerance: 0.2
   previousPos: []
   canDrag: 0
@@ -196,7 +196,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -3981,6 +3981,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -644461445695746875, guid: 5994c28148887e2449fecf49b5155c03, type: 3}
+      propertyPath: gridX
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 2899080233259306791, guid: 5994c28148887e2449fecf49b5155c03, type: 3}
       propertyPath: m_RootOrder
       value: 3

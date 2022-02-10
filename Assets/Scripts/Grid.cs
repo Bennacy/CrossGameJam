@@ -23,8 +23,8 @@ public class Grid : MonoBehaviour
     void Start()
     {
         savedInfo = GameObject.FindGameObjectWithTag("SavedInfo").GetComponent<SavedInfo>();
-        cols = savedInfo.gridX;
-        rows = savedInfo.gridY;
+        cols = savedInfo.gridY;
+        rows = savedInfo.gridX;
         GenerateGrid();
     }
 
@@ -42,28 +42,28 @@ public class Grid : MonoBehaviour
         int halfX = (int)Mathf.Floor(cols / 2);
         int halfY = (int)Mathf.Floor(rows / 2);
 
-        for (int col = 0; col < cols; col++)
+        for (int row = 0; row < rows; row++)
         {
-            GameObject currCol = new GameObject(col.ToString());
-            currCol.transform.parent = transform;
+            GameObject currRow = new GameObject(row.ToString());
+            currRow.transform.parent = transform;
             
-            float posX = col * tileSize;
+            float posX = row * tileSize;
             posX = posX - (halfX * tileSize);
-            currCol.transform.localPosition = new Vector3(posX, 0);
-            currCol.transform.localScale = new Vector2(1, 1);
-            for (int row = 0; row < rows; row++)
+            currRow.transform.localPosition = new Vector3(posX, 0);
+            currRow.transform.localScale = new Vector2(1, 1);
+            for (int col = 0; col < cols; col++)
             {
-                GameObject tile = (GameObject)Instantiate(refTile, currCol.transform);
-                tile.name = (currCol.name + ", " + row.ToString());
+                GameObject tile = (GameObject)Instantiate(refTile, currRow.transform);
+                tile.name = (currRow.name + ", " + col.ToString());
 
-                float posY = row * tileSize;
+                float posY = col * tileSize;
                 posY = posY - (halfY * tileSize);
                 tile.transform.localScale = new Vector2(tileSize, tileSize);
                 tile.transform.localPosition = new Vector2(0, posY);
 
                 Square squareScript = tile.gameObject.GetComponent<Square>();
-                squareScript.col = col;
                 squareScript.row = row;
+                squareScript.col = col;
                 squareScript.state = SquareState.free;
             }
         }
