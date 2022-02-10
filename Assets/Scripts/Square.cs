@@ -33,7 +33,6 @@ public class Square : MonoBehaviour
     {
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         ray = Physics2D.Raycast(mousePos, Vector2.zero, 0, clickLayer);
-        Debug.Log(clickLayer);
         if(ray.collider != null){
             mouseOver = ray.collider.name == gameObject.name;
         }
@@ -68,10 +67,12 @@ public class Square : MonoBehaviour
         //     towerScript.rangeOverlay.gameObject.SetActive(true);
         //     savedInfo.upgrading = true;
         // }
-        if(state == SquareState.free){
-            state = SquareState.occupied;
-        }else{
-            state = SquareState.free;
-        }
+        // if(state == SquareState.free){
+        //     state = SquareState.occupied;
+        // }else{
+        //     state = SquareState.free;
+        // }
+
+        gridScript.PlaceRoom(col, row, 10, 5);
     }
 }
