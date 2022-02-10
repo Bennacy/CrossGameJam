@@ -44,6 +44,11 @@ public class Square : MonoBehaviour
         }
 
         if(mouseOver){
+            if(savedInfo.placingRoom){
+                savedInfo.roomPos = transform.position;
+                savedInfo.roomPos.x -= transform.localScale.x / 2;
+                savedInfo.roomPos.y += transform.localScale.y / 2;
+            }
             if(Input.GetMouseButtonUp(0) && !savedInfo.dragging && !savedInfo.mouseOverCanvas && !savedInfo.mouseOverPath){
                 Clicked();
             }
@@ -73,6 +78,6 @@ public class Square : MonoBehaviour
         //     state = SquareState.free;
         // }
 
-        gridScript.PlaceRoom(col, row, 10, 5);
+        gridScript.PlaceRoom(col, row, 4, 3);
     }
 }

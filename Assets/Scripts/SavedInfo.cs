@@ -16,6 +16,9 @@ public class SavedInfo : MonoBehaviour
     // [Space]
     // [Header("References")]
     public string currScene;
+    public GameObject[] rooms;
+    public Vector2[] roomSizes;
+    public GameObject roomPreview;
     // public Square pressedTile;
     // public LayerMask canvas;
     // public LayerMask path;
@@ -34,9 +37,10 @@ public class SavedInfo : MonoBehaviour
     public bool canPlay;
     public bool clickedL;
     public bool dragging;
-    public bool buildingTower;
-    public bool upgrading;
-    public bool inALevel;
+    public bool placingRoom;
+
+    public Vector2 roomPos;
+    public Vector3 mousePos;
     // [Space]
 
     // [Space]
@@ -97,6 +101,9 @@ public class SavedInfo : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+        roomPreview = Instantiate(rooms[0]);
+        roomPreview.transform.parent = transform;
+        roomPreview.transform.position = new Vector2(1000, 10000);
 
         // string waveText = waves.text;
         // totalLevels = CountCharInString(ref waveText, '/');
@@ -121,7 +128,13 @@ public class SavedInfo : MonoBehaviour
         if(currScene != SceneManager.GetActiveScene().name){
             NewScene();
         }
-        Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        if(placingRoom){
+            roomPreview.SetActive(true);
+            roomPreview.transform.position = roomPos;
+        }else{
+            roomPreview.SetActive(false);
+        }
         // canvasRay = Physics2D.Raycast(mousePos, Vector3.zero, 0, canvas);
 
         // if(inALevel){
