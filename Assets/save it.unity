@@ -322,9 +322,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 502446010}
-  - component: {fileID: 502446009}
-  - component: {fileID: 502446011}
+  - component: {fileID: 502446013}
   - component: {fileID: 502446012}
+  - component: {fileID: 502446011}
+  - component: {fileID: 502446009}
   m_Layer: 0
   m_Name: '"Player"'
   m_TagString: Player
@@ -341,11 +342,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 502446008}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67263b93e0955de45955725fabe2c3f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ae5a4f1f6ae5e24b8506274990ca98e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coins: 0
-  coinDisplayer: {fileID: 467634016}
+  currScene: 
+  currLevel: 0
+  roomIndex: 0
+  newRoomIndex: 0
+  placedRooms: 0
+  roomPrefabs: []
+  roomSizes: []
+  roomSprites: []
+  rooms: []
+  roomPreview: {fileID: 0}
+  rotationIndex: 0
+  buildInfo:
+  - name: Classroom
+    buildCost: 0
+    maintenanceCost: 0
+    count: 0
+  mouseOverCanvas: 0
+  mouseOverPath: 0
+  canPlay: 0
+  clickedL: 0
+  dragging: 0
+  buildingTower: 0
+  upgrading: 0
+  inALevel: 0
+  money: 0
+  gridX: 0
+  gridY: 0
+  grid: {fileID: 0}
+  coins: {fileID: 0}
+  timer: 0
+  round: 0
+  roundCosts: 90
+  timeDisplayer: {fileID: 0}
 --- !u!4 &502446010
 Transform:
   m_ObjectHideFlags: 0
@@ -369,14 +401,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 502446008}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2007af6401ab861499ab22fed5cf7634, type: 3}
+  m_Script: {fileID: 11500000, guid: 67263b93e0955de45955725fabe2c3f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coins: {fileID: 502446009}
-  ge: {fileID: 502446012}
-  timer: 0
-  round: 0
-  timeDisplayer: {fileID: 760862289}
+  coins: 0
+  coinDisplayer: {fileID: 467634016}
 --- !u!114 &502446012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,13 +418,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa2ad322c8352d94bb34810ed8da3184, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coins: {fileID: 502446009}
+  coins: {fileID: 502446011}
   slider: {fileID: 1117031808}
-  timer: {fileID: 502446011}
-  staffCost: 50
-  staffAmount: 50
-  teacherCost: 100
-  teacherAmount: 100
+  timer: {fileID: 502446013}
+  savedInfo: {fileID: 502446009}
   studentRent: 50
   studentAmount: 500
   floors: 0
@@ -404,6 +430,23 @@ MonoBehaviour:
   income: 0
   expenses: 0
   roundCost: 0
+--- !u!114 &502446013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502446008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2007af6401ab861499ab22fed5cf7634, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coins: {fileID: 502446011}
+  ge: {fileID: 502446012}
+  timer: 0
+  round: 0
+  timeDisplayer: {fileID: 760862289}
 --- !u!1 &715764165
 GameObject:
   m_ObjectHideFlags: 0
@@ -995,7 +1038,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 502446011}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Timer, Assembly-CSharp
         m_MethodName: Round
         m_Mode: 1
