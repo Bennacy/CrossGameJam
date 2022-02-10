@@ -16,9 +16,6 @@ public class SavedInfo : MonoBehaviour
     // [Space]
     // [Header("References")]
     public string currScene;
-    public GameObject[] rooms;
-    public Vector2[] roomSizes;
-    public GameObject roomPreview;
     // public Square pressedTile;
     // public LayerMask canvas;
     // public LayerMask path;
@@ -37,10 +34,9 @@ public class SavedInfo : MonoBehaviour
     public bool canPlay;
     public bool clickedL;
     public bool dragging;
-    public bool placingRoom;
-
-    public Vector2 roomPos;
-    public Vector3 mousePos;
+    public bool buildingTower;
+    public bool upgrading;
+    public bool inALevel;
     // [Space]
 
     // [Space]
@@ -101,9 +97,6 @@ public class SavedInfo : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
-        roomPreview = Instantiate(rooms[0]);
-        roomPreview.transform.parent = transform;
-        roomPreview.transform.position = new Vector2(1000, 10000);
 
         // string waveText = waves.text;
         // totalLevels = CountCharInString(ref waveText, '/');
@@ -128,13 +121,7 @@ public class SavedInfo : MonoBehaviour
         if(currScene != SceneManager.GetActiveScene().name){
             NewScene();
         }
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        if(placingRoom){
-            roomPreview.SetActive(true);
-            roomPreview.transform.position = roomPos;
-        }else{
-            roomPreview.SetActive(false);
-        }
+        Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
         // canvasRay = Physics2D.Raycast(mousePos, Vector3.zero, 0, canvas);
 
         // if(inALevel){
@@ -209,5 +196,35 @@ public class SavedInfo : MonoBehaviour
         }else{
             return false;
         }
+    }
+     public Coins coins;
+    public float timer;
+    public float round;
+    public float roundCosts = 90;
+    public Text timeDisplayer;
+    void Awake()
+    {
+        timer = 0;
+        timeDisplayer.text = "Time: " + Mathf.Round(timer);
+    }
+    /* This Upate is the one that made it work!
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.D))
+        {
+            Round();
+            timeDisplayer.text = "Time: " + Mathf.Round(timer);
+        }
+    }*/
+     void Round(){
+        timer += Time.deltaTime;
+        if(timer > 5){            
+            round++;
+            timer = 0;
+            RoundEnd();
+        }
+    }
+    void RoundEnd(){
+        coins.spendMoney(roundCosts);
     }
 }
