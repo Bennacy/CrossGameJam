@@ -9,15 +9,6 @@ using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-[Serializable]
-public class Room{
-    public int level;
-    public int index;
-    public GameObject roomObject;
-    public Vector2 position;
-    public Vector2Int gridPosition;
-}
-
 public class SavedInfo : MonoBehaviour
 {
     public static SavedInfo self;
@@ -25,15 +16,6 @@ public class SavedInfo : MonoBehaviour
     // [Space]
     // [Header("References")]
     public string currScene;
-    public int placedRooms;
-    public GameObject[] roomPrefabs;
-    public Vector2[] roomSizes;
-    public Sprite[] roomSprites;
-    public Room[] rooms;
-    public int roomIndex;
-    public int newRoomIndex;
-    public GameObject roomPreview;
-    public int currLevel;
     // public Square pressedTile;
     // public LayerMask canvas;
     // public LayerMask path;
@@ -52,10 +34,9 @@ public class SavedInfo : MonoBehaviour
     public bool canPlay;
     public bool clickedL;
     public bool dragging;
-    public bool placingRoom;
-
-    public Vector2 roomPos;
-    public Vector3 mousePos;
+    public bool buildingTower;
+    public bool upgrading;
+    public bool inALevel;
     // [Space]
 
     // [Space]
@@ -101,22 +82,35 @@ public class SavedInfo : MonoBehaviour
     // public float time;
     // [Space]
 
-    [Space]
+    // [Space]
     [Header("Grid Settings")]
     public int gridX;
     public int gridY;
-    public Grid grid;
+    private Grid grid;
+    // private TilemapGrid tGrid;
 
-    void Awake()
+    void Start()
     {
         if(self == null){
             self = this;
-            // rooms = new Room[10];
         }else{
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
-        NewRoom();
+
+        // string waveText = waves.text;
+        // totalLevels = CountCharInString(ref waveText, '/');
+
+        // levelStrings = new string[totalLevels];
+        // for(int i = 0; i < totalLevels; i++){
+        //     levelStrings[i] = CutStringAt(ref waveText, '/');
+        // }
+
+        // spawnDir = new Vector3Int[totalLevels];
+        // spawnDir[0] = spawnDir[1] = spawnDir[3] = Vector3Int.up;
+        // spawnDir[2] = Vector3Int.right;
+
+        // NewScene();
     }
 
     void Update()
@@ -127,32 +121,65 @@ public class SavedInfo : MonoBehaviour
         if(currScene != SceneManager.GetActiveScene().name){
             NewScene();
         }
-        if(roomIndex != newRoomIndex){
-            NewRoom();
-        }
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        if(placingRoom){
-            roomPreview.SetActive(true);
-            roomPreview.transform.position = roomPos;
-        }else{
-            roomPreview.SetActive(false);
-        }
-    }
+        Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        // canvasRay = Physics2D.Raycast(mousePos, Vector3.zero, 0, canvas);
 
-    public void NewRoom(){
-        roomIndex = newRoomIndex;
-        Destroy(roomPreview);
-        roomPreview = Instantiate(roomPrefabs[roomIndex]);
-        roomPreview.transform.parent = transform;
+        // if(inALevel){
+        //     pathRay = Physics2D.Raycast(mousePos, Vector3.zero, 0, path);
+
+        //     if(canvasRay.collider != null){
+        //         mouseOverCanvas = true;
+        //     }else{
+        //         mouseOverCanvas = false;
+        //     }
+        //     if(pathRay.collider != null){
+        //         mouseOverPath = true;
+        //     }else{
+        //         mouseOverPath = false;
+        //     }
+        //     TilemapUpdate();
+        //     GridUpdate();
+
+        //     time += Time.deltaTime;
+
+        //     if(currHealth <= 0){
+        //         BackToMain();
+        //     }
+        // }
     }
 
     public void NewScene(){
-        grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
-        Debug.Log(grid);
         cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
         currScene = SceneManager.GetActiveScene().name;
-        Debug.Log("New Scene");
-        GetRoomsInLevel();
+
+        // string scoreReference = scores.text;
+        // int scoresSaved = CountCharInString(ref scoreReference, '/');
+        // levelScores = new LevelTime[scoresSaved];
+
+        // for(int i = 0; i < scoresSaved; i++){
+        //     levelScores[i] = new LevelTime();
+        //     CutStringAt(ref scoreReference, '-');
+        //     levelScores[i].minutes = (int)GetValueBefore(ref scoreReference, ':');
+        //     levelScores[i].seconds = int.Parse(CutStringAt(ref scoreReference, '/'));
+        // }
+
+        // if(GameObject.FindGameObjectWithTag("TileGrid") != null){
+        //     tGrid = GameObject.FindGameObjectWithTag("TileGrid").GetComponent<TilemapGrid>();
+        // }
+        // if(GameObject.FindGameObjectWithTag("Grid") != null){
+        //     grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
+        // }        currHealth = maxHealth;
+
+        // inALevel = currScene.Contains("Lvl");
+        // string levelName = currScene;
+
+        // if(inALevel){
+        //     level = (int)GetValueBefore(ref levelName, 'L');
+
+        //     CreateWaves();
+        // }
+        
+        // canPlay = true;
     }
 
     public void AlterMoney(int change){
@@ -170,40 +197,34 @@ public class SavedInfo : MonoBehaviour
             return false;
         }
     }
-
-    public void GetRoomsInLevel(){
-        foreach(Transform child in grid.transform){
-            Destroy(child.gameObject);
+     public Coins coins;
+    public float timer;
+    public float round;
+    public float roundCosts = 90;
+    public Text timeDisplayer;
+    void Awake()
+    {
+        timer = 0;
+        timeDisplayer.text = "Time: " + Mathf.Round(timer);
+    }
+    /* This Upate is the one that made it work!
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.D))
+        {
+            Round();
+            timeDisplayer.text = "Time: " + Mathf.Round(timer);
         }
-        foreach(Transform child in grid.roomParent){
-            Destroy(child.gameObject);
-        }
-        grid.GenerateGrid();
-        placedRooms = 0;
-        for(int i = 0; i < rooms.Length; i++){
-            if(rooms[i].roomObject == null){
-                return;
-            }
-            placedRooms++;
-            if(rooms[i].level == currLevel){
-                int index = rooms[i].index;
-                Debug.Log("New Room: " + rooms[i].gridPosition);
-                grid.PlaceRoom(rooms[i].gridPosition.x, rooms[i].gridPosition.y, roomSizes[index], false);
-            }
+    }*/
+     void Round(){
+        timer += Time.deltaTime;
+        if(timer > 5){            
+            round++;
+            timer = 0;
+            RoundEnd();
         }
     }
-
-    public void AddRoom(Vector2 positionToAdd, Vector2Int gridPositionToAdd){
-        for(int i = 0; i < rooms.Length; i++){
-            if(rooms[i].roomObject == null){
-                rooms[i].level = currLevel;
-                rooms[i].index = roomIndex;
-                rooms[i].roomObject = roomPrefabs[roomIndex];
-                rooms[i].position = positionToAdd;
-                rooms[i].gridPosition = gridPositionToAdd;
-                placedRooms++;
-                return;
-            }
-        }
+    void RoundEnd(){
+        coins.spendMoney(roundCosts);
     }
 }

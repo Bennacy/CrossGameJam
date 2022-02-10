@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-public enum SquareState{occupied, free}
 public class Square : MonoBehaviour
 {    
     [Space]
@@ -14,8 +12,6 @@ public class Square : MonoBehaviour
     public LayerMask clickLayer;
     public GameObject towerPrefab;
     public SquareState state;
-    public GameObject assignedRoom;
-
     [Space]
 
     [Space]
@@ -48,11 +44,6 @@ public class Square : MonoBehaviour
         }
 
         if(mouseOver){
-            if(savedInfo.placingRoom){
-                savedInfo.roomPos = transform.position;
-                savedInfo.roomPos.x -= transform.localScale.x / 2;
-                savedInfo.roomPos.y += transform.localScale.y / 2;
-            }
             if(Input.GetMouseButtonUp(0) && !savedInfo.dragging && !savedInfo.mouseOverCanvas && !savedInfo.mouseOverPath){
                 Clicked();
             }
@@ -60,8 +51,28 @@ public class Square : MonoBehaviour
     }
 
     private void Clicked(){
-        if(savedInfo.placedRooms < savedInfo.rooms.Length){
-            gridScript.PlaceRoom(col, row, savedInfo.roomSizes[savedInfo.roomIndex], true);
-        }
+        Debug.Log("A");
+        // if(transform.childCount == 0){
+        //     if(savedInfo.buildingTower){
+        //         if(savedInfo.Pay(savedInfo.newTowerCost)){
+        //             if(!Input.GetKey(KeyCode.LeftShift)){
+        //                 savedInfo.buildingTower = false;
+        //             }
+        //             AssignTower(savedInfo.towerToBuild);
+        //         }else{
+        //             savedInfo.buildingTower = false;
+        //         }
+        //     }
+        // }else{
+        //     towerScript.rangeOverlay.gameObject.SetActive(true);
+        //     savedInfo.upgrading = true;
+        // }
+        // if(state == SquareState.free){
+        //     state = SquareState.occupied;
+        // }else{
+        //     state = SquareState.free;
+        // }
+
+        gridScript.PlaceRoom(col, row, 10, 5);
     }
 }

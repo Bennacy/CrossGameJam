@@ -7,12 +7,14 @@ using UnityEngine.UI;
 public class Timer : MonoBehaviour
 {
     public Coins coins;
+
+    public GameEconomy ge;
     public float timer;
     public float round;
-    public float roundCosts = 90;
     public Text timeDisplayer;
     void Awake()
     {
+        ge.SetMaxSatisfaction(100);
         timer = 0;
         timeDisplayer.text = "Time: " + Mathf.Round(timer);
     }
@@ -30,10 +32,13 @@ public class Timer : MonoBehaviour
         if(timer > 5){            
             round++;
             timer = 0;
+            ge.CalculateCosts();
+            ge.CalculateSatisfaction();
             RoundEnd();
         }
     }
     void RoundEnd(){
-        coins.spendMoney(roundCosts);
+        coins.spendMoney(ge.roundCost);
+        ge.SetSatisfaction(ge.studentSatisfaction);
     }
 }

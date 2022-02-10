@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum SquareState{occupied, free}
+
 public class Grid : MonoBehaviour
 {
     [Space]
     [Header("References")]
     public GameObject refTile;
     private SavedInfo savedInfo;
-    public Transform roomParent;
     [Space]
     
     private int rows;
@@ -32,7 +34,7 @@ public class Grid : MonoBehaviour
         transform.localScale = new Vector2(transform.localScale.x, transform.localScale.x);
     }
 
-    public void GenerateGrid(){
+    private void GenerateGrid(){
         foreach(Transform child in transform){
             Destroy(child.gameObject);
         }
@@ -67,11 +69,10 @@ public class Grid : MonoBehaviour
         }
     }
 
-    public bool PlaceRoom(int initX, int initY, Vector2 size, bool isNew){
-        for(int x = initX; x < (initX + size.x); x++){
+    public bool PlaceRoom(int initX, int initY, int w, int h){
+        for(int x = initX; x < (initX + w); x++){
             Transform currCol = transform.Find(x.ToString());
-            for(int y = initY; y > initY - size.y; y--){
-                Debug.Log(currCol);
+            for(int y = initY; y > initY - h; y--){
                 Transform currSquare = currCol.Find(currCol.name.ToString() + ", " + y.ToString());
                 Square script = currSquare.gameObject.GetComponent<Square>();
                 if(script.state == SquareState.occupied){
@@ -80,22 +81,12 @@ public class Grid : MonoBehaviour
                 }              
             }
         }
-        Transform firstCol = transform.Find(initX.ToString());
-        Transform firstSquare = firstCol.Find(firstCol.name + ", " + (initY).ToString());
-        GameObject newRoom = Instantiate(savedInfo.roomPrefabs[savedInfo.roomIndex]);
-        newRoom.transform.position = new Vector2(firstSquare.position.x - .5f, firstSquare.localPosition.y + .5f);
-        newRoom.transform.parent = roomParent;
-        if(isNew){
-            Vector2Int gridPos = new Vector2Int(initX, initY);
-            savedInfo.AddRoom(newRoom.transform.position, gridPos);
-        }
-        for(int x = initX; x < (initX + size.x); x++){
+        for(int x = initX; x < (initX + w); x++){
             Transform currCol = transform.Find(x.ToString());
-            for(int y = initY; y > initY - size.y; y--){
+            for(int y = initY; y > initY - h; y--){
                 Transform currSquare = currCol.Find(currCol.name.ToString() + ", " + y.ToString());
                 Square script = currSquare.gameObject.GetComponent<Square>();
-                script.state = SquareState.occupied;
-                script.assignedRoom = newRoom;
+                script.state = SquareState.occupied;             
             }
         }
         return true;
