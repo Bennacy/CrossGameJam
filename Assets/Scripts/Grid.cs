@@ -11,6 +11,7 @@ public class Grid : MonoBehaviour
     [Header("References")]
     public GameObject refTile;
     private SavedInfo savedInfo;
+    public Transform roomParent;
     [Space]
     
     private int rows;
@@ -34,7 +35,7 @@ public class Grid : MonoBehaviour
         transform.localScale = new Vector2(transform.localScale.x, transform.localScale.x);
     }
 
-    private void GenerateGrid(){
+    public void GenerateGrid(){
         foreach(Transform child in transform){
             Destroy(child.gameObject);
         }
@@ -81,7 +82,6 @@ public class Grid : MonoBehaviour
                 }              
             }
         }
-        for(int x = initX; x < (initX + w); x++){
         if(rotationIndex % 2 != 0){
             Vector2 tempVector = size;
             size.x = tempVector.y;
@@ -100,7 +100,7 @@ public class Grid : MonoBehaviour
         }
         for(int x = initX; x < (initX + size.x); x++){
             Transform currCol = transform.Find(x.ToString());
-            for(int y = initY; y > initY - h; y--){
+            for(int y = initY; y > initY - size.y; y--){
                 Transform currSquare = currCol.Find(currCol.name.ToString() + ", " + y.ToString());
                 Square script = currSquare.gameObject.GetComponent<Square>();
                 script.state = SquareState.occupied;             
@@ -108,4 +108,4 @@ public class Grid : MonoBehaviour
         }
         return true;
     }
-}}
+}
