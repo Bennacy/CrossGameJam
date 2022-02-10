@@ -30,9 +30,13 @@ public class BuildingInfo{
 public class SavedInfo : MonoBehaviour
 {
     public static SavedInfo self;
-    // public int level;
-    // [Space]
-    // [Header("References")]
+
+    [Space]
+    [Header("References")]
+    public GameObject roomPreview;
+    private Camera cam;
+
+
     public string currScene;
     public int currLevel;
     public int roomIndex;
@@ -42,14 +46,15 @@ public class SavedInfo : MonoBehaviour
     public Vector2[] roomSizes;
     public Sprite[] roomSprites;
     public Room[] rooms;
-    public GameObject roomPreview;
     public int rotationIndex;
+
+    public Vector3 mousePos;
+    public Vector3 roomPos;
     // public Square pressedTile;
     // public LayerMask canvas;
     // public LayerMask path;
     // private RaycastHit2D canvasRay;
     // private RaycastHit2D pathRay;
-    private Camera cam;
     // public GameObject towerToBuild;
     // public TextAsset waves;
     // public TextAsset scores;
@@ -57,8 +62,8 @@ public class SavedInfo : MonoBehaviour
 
     public BuildingInfo[] buildInfo;
     
-    // [Space]
-    // [Header("Booleans")]
+    [Space]
+    [Header("Booleans")]
     public bool mouseOverCanvas;
     public bool mouseOverPath;
     public bool canPlay;
@@ -66,8 +71,8 @@ public class SavedInfo : MonoBehaviour
     public bool dragging;
     public bool buildingTower;
     public bool upgrading;
-    public bool inALevel;
-    // [Space]
+    public bool placingRoom;
+    [Space]
 
     // [Space]
     // [Header("Health")]
@@ -136,19 +141,8 @@ public class SavedInfo : MonoBehaviour
             timeDisplayer.text = "Time: " + Mathf.Round(timer);
         }
     }*/
-     void Round(){
-        timer += Time.deltaTime;
-        if(timer > 5){            
-            round++;
-            timer = 0;
-            RoundEnd();
-        }
-    }
-    void RoundEnd(){
-        coins.spendMoney(roundCosts);
-    }
 
-    void Start()
+    void Awake()
     {
         if(self == null){
             self = this;
@@ -265,6 +259,10 @@ public class SavedInfo : MonoBehaviour
         }else{
             roomPreview.SetActive(false);
         }
+        grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
+        cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        currScene = SceneManager.GetActiveScene().name;
+        GetRoomsInLevel();
     }
 
     public void NewRoom(){
@@ -275,11 +273,24 @@ public class SavedInfo : MonoBehaviour
         roomPreview.transform.parent = transform;
     }
 
-    public void NewScene(){
-        grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
-        cam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-        currScene = SceneManager.GetActiveScene().name;
-        GetRoomsInLevel();
+    public void GetRoomsInLevel(){
+        foreach(Transform child in grid.transform){
+            Destroy(child.gameObject);
+        }
+        foreach(Transform child in grid.roomParent){
+            Destroy(child.gameObject);
+        }
+        grid.GenerateGrid();
+        placedRooms = 0;
+        for(int i = 0; i < rooms.Length; i++){
+            if(rooms[i].roomObject != null){
+                placedRooms++;
+                if(rooms[i].level == currLevel){
+                    int index = rooms[i].index;
+                    grid.PlaceRoom(rooms[i].gridPosition.x, rooms[i].gridPosition.y, roomSizes[index], rooms[i].index, rooms[i].rotationIndex, false);
+                }
+            }
+        }
     }
 
     public void AlterMoney(int change){
@@ -296,16 +307,6 @@ public class SavedInfo : MonoBehaviour
         }else{
             return false;
         }
-    }
-     public Coins coins;
-    public float timer;
-    public float round;
-    public float roundCosts = 90;
-    public Text timeDisplayer;
-    void Awake()
-    {
-        timer = 0;
-        timeDisplayer.text = "Time: " + Mathf.Round(timer);
     }
     /* This Upate is the one that made it work!
     void Update()
