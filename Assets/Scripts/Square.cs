@@ -74,5 +74,8 @@ public class Square : MonoBehaviour
         // }
 
         gridScript.PlaceRoom(col, row, 10, 5);
+        if(savedInfo.placedRooms < savedInfo.rooms.Length && savedInfo.placingRoom){
+            gridScript.PlaceRoom(col, row, savedInfo.roomSizes[savedInfo.roomIndex], savedInfo.roomIndex, savedInfo.rotationIndex, true);
+        }
     }
 }
