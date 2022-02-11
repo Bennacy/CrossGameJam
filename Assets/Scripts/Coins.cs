@@ -13,7 +13,8 @@ public class Coins : MonoBehaviour
 
     void Awake()
     {
-        coins = 20000;
+        Mathf.Clamp(coins, 0, Mathf.Infinity);
+        coins = 1000;
         coinDisplayer.text = "Coins: " + coins.ToString();
     }
 

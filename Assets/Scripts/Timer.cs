@@ -14,32 +14,30 @@ public class Timer : MonoBehaviour
     public Text timeDisplayer;
     void Awake()
     {
-        ge.SetMaxSatisfaction(100);
+        ge.SetMaxSatisfaction();
         timer = 0;
         timeDisplayer.text = "Time: " + Mathf.Round(timer);
+        ge.maxStudents = 40;
+        ge.studentAmount = 20;
     }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.D))
         {
             Round();
-            timeDisplayer.text = "Time: " + Mathf.Round(timer);
+            //timeDisplayer.text = "Time: " + Mathf.Round(timer);
+            Debug.Log(ge.studentAmount);
+            Debug.Log(round);
         }
     }
-     void Round(){
-        timer += Time.deltaTime;
-        if(timer > 5){            
+     void Round(){            
             round++;
             timer = 0;
             ge.CalculateCosts();
             ge.CalculateSatisfaction();
-            ge.DropOut();
-            RoundEnd();
-        }
-    }
-    void RoundEnd(){
-        coins.spendMoney(ge.roundCost);
-        ge.SetSatisfaction(ge.studentSatisfaction);
+            coins.spendMoney(ge.roundCost);
+            ge.SetSatisfaction(ge.studentSatisfaction);
+            ge.StudentApplications();
     }
 }

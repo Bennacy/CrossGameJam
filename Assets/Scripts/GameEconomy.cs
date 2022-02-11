@@ -11,17 +11,16 @@ public class GameEconomy : MonoBehaviour
 
     public Timer timer;
 
-    public SavedInfo savedInfo;
 
     public int studentRent = 50;
 
-    public int studentAmount = 20;
+    public float studentAmount = 20;
 
     public int floors;
 
     public int courses = 1;
 
-    public float studentSatisfaction = 50;
+    public float studentSatisfaction = 0;
 
     public float income;
     
@@ -32,60 +31,66 @@ public class GameEconomy : MonoBehaviour
     public float maxStudents = 40;
 
     public void Update(){
-        if(Input.GetKeyDown(KeyCode.A)){
-            savedInfo.buildInfo[0].count += 1;
-            Debug.Log("A classroom");
-        }
     }
     public void CalculateCosts()
     {
-        expenses = (savedInfo.buildInfo[10].maintenanceCost * savedInfo.buildInfo[10].count) + (savedInfo.buildInfo[9].maintenanceCost * savedInfo.buildInfo[9].count);
+        expenses = 400;
         income = (studentAmount * studentRent);
-        roundCost = income - expenses;
+        roundCost = expenses - income;
     }
-     public void SetMaxSatisfaction(float satisfaction){
-        slider.maxValue = 100;}
-    public void SetSatisfaction(float satisfaction){
+     public void SetMaxSatisfaction(){
         slider.maxValue = 100;
-        slider.value = satisfaction;
-        if(satisfaction > 100) satisfaction = 100;
-        Debug.Log(studentSatisfaction);
+        slider.minValue = -100;
+        }
+    public void SetSatisfaction(float satisfaction){
+        satisfaction = studentSatisfaction;
+        Mathf.Clamp(studentSatisfaction, 0, 100);
     }
-    public float CalculateSatisfaction(){
-       SatisfactionCalculator(0, 20);
-       SatisfactionCalculator(1, 100);
-       SatisfactionCalculator(2, 300);
-       SatisfactionCalculator(3, 25);
-       SatisfactionCalculator(4, 25);
-       SatisfactionCalculator(5, 50);
-       SatisfactionCalculator(7, 500);
-       SatisfactionCalculator(8, 700);
-       SatisfactionCalculator(9, 20);
-       SatisfactionCalculator(10, 15);
-       return studentSatisfaction;
+    public void CalculateSatisfaction(){
+       SatisfactionCalculator(0);//20);  // at 20 students +0  at 41 -1
+       SatisfactionCalculator(0);//100); // at 20 students +1  at 41 +1
+       SatisfactionCalculator(0);//300); //  at 20 students +1  at 41 +1
+       SatisfactionCalculator(0);//25); //  at 20 students +1  at 41 -1
+       SatisfactionCalculator(0);//25); //  at 20 students +1  at 41 -1
+       SatisfactionCalculator(0);//50); //  at 20 students +1  at 41 +1
+       SatisfactionCalculator(0);//500); //  at 20 students +1  at 41 +1
+       SatisfactionCalculator(0); //  at 20 students +1  at 41 +1
+       SatisfactionCalculator(0);//4); //  at 20 students -1  at 41 -1
+       SatisfactionCalculator(0);//2); //  at 20 students -1  at 41 -1
     }
-    public float SatisfactionCalculator(int noB, int perstudent){
-        int satisfactor=studentAmount/savedInfo.buildInfo[noB].count;
+    public float SatisfactionCalculator(/*int noB,*/ int perstudent){
+
+        float satisfactor=studentAmount;//noB would be the "divisor" here, the bottom part of the fraction, the number of buildings built
         if(perstudent==satisfactor){
             return studentSatisfaction;
         }
         else if(perstudent>satisfactor){
-            return studentSatisfaction -(perstudent/satisfactor);
+
+            return studentSatisfaction +=1;    
         }
         else if(perstudent<satisfactor){
-            return studentSatisfaction + (perstudent/satisfactor);
+            
+            return studentSatisfaction -=1;
         }
         else return studentSatisfaction;
     }
-    public float DropOut(){
-       studentSatisfaction = ((studentSatisfaction/100) * (studentAmount / 5));
-       return studentSatisfaction;
-    }
 
-    public float BuyCourses(){
+    public void BuyCourses(){
         courses +=1;
         maxStudents = 40 * courses;
         coins.spendMoney(800);
-        return courses;
+    }
+
+    public void BuyBuildings(){
+
+    }
+    public float StudentApplications(){
+        Mathf.Clamp(studentAmount,0,maxStudents);
+        StudentApplicationsCalculator();
+        return studentAmount;
+        
+    }
+    public float StudentApplicationsCalculator(){
+       return studentAmount += (studentSatisfaction/5);
     }
 }
