@@ -13,7 +13,6 @@ public class Coins : MonoBehaviour
 
     void Awake()
     {
-        Mathf.Clamp(coins, 0, Mathf.Infinity);
         coins = 1000;
         coinDisplayer.text = "Coins: " + coins.ToString();
     }
@@ -28,7 +27,7 @@ public class Coins : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            getMoney(100);
+            getMoney(2000);
             coinDisplayer.text = "Coins: " + coins;
         }
     }
@@ -47,5 +46,6 @@ public class Coins : MonoBehaviour
     public void getMoney(float stonks){
         coins += stonks;
     }
+
 }
 

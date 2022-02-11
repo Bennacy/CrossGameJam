@@ -23,6 +23,7 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        StartTimer();
         if (Input.GetKeyDown(KeyCode.D))
         {
             Round();
@@ -39,5 +40,11 @@ public class Timer : MonoBehaviour
             coins.spendMoney(ge.roundCost);
             ge.SetSatisfaction(ge.studentSatisfaction);
             ge.StudentApplications();
+    }
+    void StartTimer(){
+        timer +=Time.deltaTime;
+        Mathf.Round(timer);
+        if(timer > 2)
+        timer = 0;
     }
 }
