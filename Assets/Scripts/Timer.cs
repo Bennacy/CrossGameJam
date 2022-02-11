@@ -34,6 +34,7 @@ public class Timer : MonoBehaviour
             timer = 0;
             ge.CalculateCosts();
             ge.CalculateSatisfaction();
+            ge.DropOut();
             RoundEnd();
         }
     }

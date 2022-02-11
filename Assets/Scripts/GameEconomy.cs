@@ -28,6 +28,8 @@ public class GameEconomy : MonoBehaviour
     public float expenses;
 
     public float roundCost;
+    
+    public float maxStudents = 40;
 
     public void Update(){
         if(Input.GetKeyDown(KeyCode.A)){
@@ -51,7 +53,7 @@ public class GameEconomy : MonoBehaviour
     }
     public float CalculateSatisfaction(){
        SatisfactionCalculator(0, 20);
-       /*SatisfactionCalculator(1, 100);
+       SatisfactionCalculator(1, 100);
        SatisfactionCalculator(2, 300);
        SatisfactionCalculator(3, 25);
        SatisfactionCalculator(4, 25);
@@ -59,7 +61,7 @@ public class GameEconomy : MonoBehaviour
        SatisfactionCalculator(7, 500);
        SatisfactionCalculator(8, 700);
        SatisfactionCalculator(9, 20);
-       SatisfactionCalculator(10, 15);*/
+       SatisfactionCalculator(10, 15);
        return studentSatisfaction;
     }
     public float SatisfactionCalculator(int noB, int perstudent){
@@ -74,5 +76,16 @@ public class GameEconomy : MonoBehaviour
             return studentSatisfaction + (perstudent/satisfactor);
         }
         else return studentSatisfaction;
+    }
+    public float DropOut(){
+       studentSatisfaction = ((studentSatisfaction/100) * (studentAmount / 5));
+       return studentSatisfaction;
+    }
+
+    public float BuyCourses(){
+        courses +=1;
+        maxStudents = 40 * courses;
+        coins.spendMoney(800);
+        return courses;
     }
 }
